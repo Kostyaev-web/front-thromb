@@ -1,0 +1,61 @@
+:root {
+  --webmd-blue: #005BBB;
+  --webmd-light-blue: #0066CC;
+  --webmd-dark-blue: #003D7A;
+  --webmd-navy: #002D5C;
+  --webmd-teal: #007B8C;
+  --webmd-green: #5B9F4D;
+  --webmd-orange: #F57C00;
+  --bg-color: #FFFFFF;
+  --bg-light: #F6F8F9;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-light: #999999;
+  --border-color: #E0E0E0;
+  --shadow-light: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-hover: 0 2px 4px rgba(0,0,0,0.12);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  background: white;
+  min-height: calc(100vh - 52px);
+  padding: 20px 0;
+  flex: 1;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+a {
+  color: var(--webmd-blue);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  text-decoration: none;
+  color: var(--webmd-dark-blue);
+}

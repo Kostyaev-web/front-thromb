@@ -1,0 +1,179 @@
+.symptoms-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Поиск */
+.search-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-section .search-input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid #CCCCCC;
+  border-radius: 3px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+}
+
+.search-section .search-input:focus {
+  outline: none;
+  border-color: var(--webmd-blue);
+  box-shadow: 0 0 0 2px rgba(0, 91, 187, 0.1);
+}
+
+.search-section .search-btn {
+  padding: 10px 24px;
+  background: var(--webmd-blue);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 91, 187, 0.2);
+}
+
+.search-section .search-btn:hover {
+  background: var(--webmd-dark-blue);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 91, 187, 0.3);
+}
+
+/* Карточки */
+.symptoms-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.symptom-card {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.symptom-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.symptom-card .card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  flex: 1;
+}
+
+.symptom-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #F0F0F0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.symptom-info {
+  padding: 15px;
+}
+
+.symptom-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--webmd-blue);
+  margin-bottom: 6px;
+  line-height: 1.3;
+  transition: color 0.2s ease;
+}
+
+.symptom-title:hover {
+  text-decoration: none;
+  color: var(--webmd-dark-blue);
+}
+
+.symptom-info .category {
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.points {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.points-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--webmd-orange);
+}
+
+.points-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+/* Кнопка добавить */
+.card-action {
+  padding: 0 15px 15px;
+}
+
+.add-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 8px 16px;
+  background: var(--webmd-blue);
+  color: white;
+  text-decoration: none;
+  border-radius: 3px;
+  border: none;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.add-btn:hover {
+  background: var(--webmd-dark-blue);
+}
+
+.add-btn.disabled {
+  background: #CCCCCC;
+  cursor: not-allowed;
+  opacity: 0.6;
+  display: block;
+  text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+  .symptoms-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .symptoms-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
