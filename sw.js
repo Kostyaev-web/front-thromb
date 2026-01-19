@@ -1,11 +1,10 @@
 const CACHE_NAME = 'wells-method-v1';
-const BASE_PATH = '/front-thromb';
 const STATIC_CACHE_URLS = [
-  `${BASE_PATH}/`,
-  `${BASE_PATH}/index.html`,
-  `${BASE_PATH}/favicon.svg`,
-  `${BASE_PATH}/icon-192x192.png`,
-  `${BASE_PATH}/icon-512x512.png`,
+  '/',
+  '/index.html',
+  '/favicon.svg',
+  '/icon-192x192.png',
+  '/icon-512x512.png',
 ];
 
 // Установка service worker
@@ -75,7 +74,7 @@ self.addEventListener('fetch', (event) => {
         .catch(() => {
           // Если сеть недоступна и кеша нет, возвращаем базовую страницу
           if (request.mode === 'navigate') {
-            return caches.match(`${BASE_PATH}/index.html`);
+            return caches.match('/index.html');
           }
         })
     );
