@@ -1,5 +1,5 @@
 const CACHE_NAME = 'wells-method-v1';
-const BASE_PATH = '/WEB-test-front';
+const BASE_PATH = '/front-thromb';
 const STATIC_CACHE_URLS = [
   `${BASE_PATH}/`,
   `${BASE_PATH}/index.html`,
