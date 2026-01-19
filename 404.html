@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        // Проксирование API запросов через относительные пути
+        if (window.location.pathname.startsWith('/api/')) {
+            // Редирект на ZeroTier бэкенд
+            const backendUrl = 'http://10.98.12.125:8000' + window.location.pathname + window.location.search;
+            fetch(backendUrl)
+                .then(response => response.json())
+                .then(data => {
+                    document.body.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                });
+        }
+    </script>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
+</html>
