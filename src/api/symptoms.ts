@@ -1,4 +1,5 @@
 import { Symptom, SymptomsResponse } from '../types';
+import { getApiBaseUrl, isTauri, normalizeImageUrl } from '../config/api';
 
 // Mock данные для случая, когда бэкенд недоступен
 const mockSymptoms: Symptom[] = [
@@ -108,7 +109,25 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
       params.append('page', page.toString());
     }
 
-    const url = `/api/symptoms/${params.toString() ? `?${params.toString()}` : ''}`;
+    // Получаем базовый URL для API запросов
+    // - Dev режим: пустая строка (прокси через Vite)
+    // - GitHub Pages: пустая строка (относительный путь на тот же домен)
+    // - Tauri production: прямой URL к ZeroTier бэкенду
+    const baseUrl = getApiBaseUrl();
+    const url = `${baseUrl}/api/symptoms/${params.toString() ? `?${params.toString()}` : ''}`;
+    
+    // Логирование для отладки
+    console.log('🔍 API Debug:', {
+      isTauri,
+      isGitHubPages: window.location.hostname.includes('github.io'),
+      protocol: window.location.protocol,
+      hostname: window.location.hostname,
+      port: window.location.port,
+      href: window.location.href,
+      baseUrl,
+      fullUrl: url,
+    });
+    
     const response = await fetch(url);
 
     if (!response.ok) {
@@ -116,14 +135,21 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
     }
 
     const data: SymptomsResponse = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
+    // Нормализуем URL изображений и добавляем изображение по умолчанию, если поле пустое
     data.results = data.results.map(symptom => ({
       ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
+      image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
     }));
     return data;
   } catch (error) {
-    console.warn('Backend недоступен, используем mock данные:', error);
+    console.error('❌ Backend недоступен, используем mock данные:', error);
+    console.error('🔍 Детали ошибки:', {
+      message: error instanceof Error ? error.message : String(error),
+      isTauri,
+      isGitHubPages: window.location.hostname.includes('github.io'),
+      baseUrl: getApiBaseUrl(),
+      attemptedUrl: `${getApiBaseUrl()}/api/symptoms/`,
+    });
     // Используем mock данные
     let filteredSymptoms = [...mockSymptoms];
     
@@ -144,7 +170,7 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
       previous: null,
       results: filteredSymptoms.map(symptom => ({
         ...symptom,
-        image_url: symptom.image_url || defaultImageUrl,
+        image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
       })),
     };
   }
@@ -155,28 +181,36 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
  */
 export async function getSymptomById(id: number): Promise<Symptom> {
   try {
-    const response = await fetch(`/api/symptoms/${id}/`);
+    // Получаем базовый URL для API запросов (аналогично getSymptoms)
+    const baseUrl = getApiBaseUrl();
+    const response = await fetch(`${baseUrl}/api/symptoms/${id}/`);
 
     if (!response.ok) {
       throw new Error('Failed to fetch symptom');
     }
 
     const data: Symptom = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
     return {
       ...data,
-      image_url: data.image_url || defaultImageUrl,
+      image_url: data.image_url ? normalizeImageUrl(data.image_url) : defaultImageUrl,
     };
   } catch (error) {
-    console.warn('Backend недоступен, используем mock данные:', error);
-    // Используем mock данные
+    console.error('❌ Backend недоступен, используем mock данные:', error);
+    console.error('🔍 Детали ошибки:', {
+      message: error instanceof Error ? error.message : String(error),
+      isTauri,
+      isGitHubPages: window.location.hostname.includes('github.io'),
+      baseUrl: getApiBaseUrl(),
+      attemptedUrl: `${getApiBaseUrl()}/api/symptoms/${id}/`,
+    });
+
     const symptom = mockSymptoms.find(s => s.id === id);
     if (!symptom) {
       throw new Error('Symptom not found');
     }
     return {
       ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
+      image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
     };
   }
 }

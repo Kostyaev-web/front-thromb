@@ -1,24 +1,36 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { getSymptoms } from '../api/symptoms';
 import { Symptom } from '../types';
+import { RootState } from '../store/store';
+import { setSearchQuery } from '../store/filtersSlice';
 import './SymptomsList.css';
 
 export function SymptomsList() {
+  const dispatch = useDispatch();
+  const { searchQuery } = useSelector((state: RootState) => state.filters);
   const [symptoms, setSymptoms] = useState<Symptom[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchInput, setSearchInput] = useState('');
+  
+  // Синхронизируем локальный input с Redux
+  const [searchInput, setSearchInput] = useState(searchQuery);
+  
+  // Обновляем input при изменении Redux state
+  useEffect(() => {
+    setSearchInput(searchQuery);
+  }, [searchQuery]);
 
+  // Загружаем симптомы при монтировании и при изменении searchQuery
   useEffect(() => {
     let isMounted = true;
     
     const loadData = async () => {
       setLoading(true);
       try {
-        const data = await getSymptoms();
+        const data = await getSymptoms(searchQuery || undefined);
         if (isMounted) {
           setSymptoms(data.results);
         }
@@ -36,24 +48,12 @@ export function SymptomsList() {
     return () => {
       isMounted = false;
     };
-  }, []);
-
-  const loadSymptoms = async (search?: string) => {
-    setLoading(true);
-    try {
-      const data = await getSymptoms(search);
-      setSymptoms(data.results);
-    } catch (error) {
-      console.error('Ошибка загрузки симптомов:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [searchQuery]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setSearchQuery(searchInput);
-    loadSymptoms(searchInput);
+    // Сохраняем поисковую строку в Redux
+    dispatch(setSearchQuery(searchInput));
   };
 
   const getPointsLabel = (points: number): string => {

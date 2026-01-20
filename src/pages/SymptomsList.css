@@ -168,12 +168,73 @@
 @media (max-width: 992px) {
   .symptoms-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .symptoms-container {
+    padding: 0 10px;
+  }
+
+  .search-section {
+    padding: 15px;
   }
 }
 
 @media (max-width: 768px) {
   .symptoms-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .symptoms-container {
+    padding: 0 10px;
+  }
+
+  .search-section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .search-section .d-flex {
+    flex-direction: column;
+  }
+
+  .search-section .search-input {
+    margin-bottom: 10px;
+  }
+
+  .search-section .search-btn {
+    width: 100%;
+  }
+
+  .symptom-card {
+    margin-bottom: 0;
+  }
+
+  .symptom-image {
+    height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .symptoms-container {
+    padding: 0 8px;
+  }
+
+  .search-section {
+    padding: 12px;
+  }
+
+  .symptom-info {
+    padding: 12px;
+  }
+
+  .symptom-title {
+    font-size: 14px;
+  }
+
+  .points-value {
+    font-size: 20px;
   }
 }
 
