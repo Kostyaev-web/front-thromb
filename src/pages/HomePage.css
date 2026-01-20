@@ -412,24 +412,141 @@
 }
 
 /* Адаптивность */
-@media (max-width: 768px) {
+@media (max-width: 992px) {
+  .home-hero {
+    padding: 60px 0;
+  }
+
   .hero-title {
-    font-size: 32px;
+    font-size: 36px;
+  }
+
+  .features-section {
+    margin-bottom: 60px;
+  }
+
+  .description-section {
+    margin-bottom: 60px;
+  }
+
+  .risk-levels-section {
+    margin-bottom: 60px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    padding: 40px 0;
+    margin-bottom: 40px;
+  }
+
+  .hero-title {
+    font-size: 28px;
   }
 
   .hero-subtitle {
-    font-size: 18px;
+    font-size: 16px;
+    margin-bottom: 30px;
   }
 
   .hero-icon {
-    font-size: 60px;
+    font-size: 50px;
+    margin-bottom: 15px;
+  }
+
+  .hero-button {
+    padding: 14px 30px;
+    font-size: 16px;
   }
 
   .section-title {
-    font-size: 28px;
+    font-size: 24px;
+    margin-bottom: 30px;
   }
 
   .cta-content h2 {
+    font-size: 24px;
+  }
+
+  .cta-content p {
+    font-size: 16px;
+  }
+
+  .cta-section {
+    padding: 40px 20px;
+  }
+
+  .info-block {
+    padding: 25px;
+    margin-bottom: 20px;
+  }
+
+  .info-block h2 {
+    font-size: 22px;
+  }
+
+  .feature-card {
+    margin-bottom: 20px;
+  }
+
+  .risk-card {
+    padding: 30px 20px;
+    margin-bottom: 20px;
+  }
+
+  .risk-card h3 {
+    font-size: 20px;
+  }
+
+  .risk-value {
     font-size: 28px;
+  }
+}
+
+@media (max-width: 576px) {
+  .home-hero {
+    padding: 30px 0;
+  }
+
+  .hero-title {
+    font-size: 24px;
+  }
+
+  .hero-subtitle {
+    font-size: 14px;
+  }
+
+  .hero-icon {
+    font-size: 40px;
+  }
+
+  .hero-button {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .info-block {
+    padding: 20px;
+  }
+
+  .info-block h2 {
+    font-size: 18px;
+  }
+
+  .info-icon {
+    font-size: 36px;
+  }
+
+  .cta-content h2 {
+    font-size: 20px;
+  }
+
+  .cta-button {
+    padding: 12px 24px;
+    font-size: 16px;
   }
 }

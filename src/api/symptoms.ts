@@ -1,4 +1,5 @@
 import { Symptom, SymptomsResponse } from '../types';
+import { API_BASE_URL, isTauri, normalizeImageUrl } from '../config/api';
 
 // Mock данные для случая, когда бэкенд недоступен
 const mockSymptoms: Symptom[] = [
@@ -108,22 +109,68 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
       params.append('page', page.toString());
     }
 
-    const url = `/api/symptoms/${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await fetch(url);
+    // Определяем режим работы:
+    // - В dev режиме (Vite dev server на порту 5173) используем прокси через Vite
+    // - В production Tauri build используем прямой HTTP URL к API
+    // - В обычном браузере (web версия) тоже используем прямой URL
+    
+    // Проверяем, что это именно Vite dev server (порт 5173)
+    // В production билде Tauri протокол будет 'tauri:' или 'file:', а порт пустой
+    const isViteDevServer = (window.location.protocol === 'https:' || window.location.protocol === 'http:') 
+      && (window.location.port === '5173' || window.location.hostname.includes('5173'));
+    
+    // В Vite dev server используем прокси (относительный путь '/api')
+    // В остальных случаях (Tauri production или web) используем прямой API_BASE_URL
+    const baseUrl = isViteDevServer ? '' : API_BASE_URL;
+    const url = `${baseUrl}/api/symptoms/${params.toString() ? `?${params.toString()}` : ''}`;
+    
+    // Логирование для отладки
+    console.log('🔍 API Debug:', {
+      isTauri,
+      isViteDevServer,
+      protocol: window.location.protocol,
+      hostname: window.location.hostname,
+      port: window.location.port,
+      href: window.location.href,
+      baseUrl,
+      fullUrl: url,
+      API_BASE_URL,
+    });
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch symptoms');
+      throw new Error(`Failed to fetch symptoms: ${response.status} ${response.statusText}`);
     }
 
     const data: SymptomsResponse = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
+    // Нормализуем URL изображений и добавляем изображение по умолчанию, если поле пустое
     data.results = data.results.map(symptom => ({
       ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
+      image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
     }));
     return data;
   } catch (error) {
-    console.warn('Backend недоступен, используем mock данные:', error);
+    const isViteDevServer = (window.location.protocol === 'https:' || window.location.protocol === 'http:') 
+      && (window.location.port === '5173' || window.location.hostname.includes('5173'));
+    const attemptedBaseUrl = isViteDevServer ? '' : API_BASE_URL;
+    const attemptedUrl = `${attemptedBaseUrl}/api/symptoms/`;
+    
+    console.error('❌ Backend недоступен, используем mock данные:', error);
+    console.error('🔍 Детали ошибки:', {
+      message: error instanceof Error ? error.message : String(error),
+      isTauri,
+      isViteDevServer,
+      protocol: window.location.protocol,
+      port: window.location.port,
+      API_BASE_URL,
+      attemptedUrl,
+    });
     // Используем mock данные
     let filteredSymptoms = [...mockSymptoms];
     
@@ -144,7 +191,7 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
       previous: null,
       results: filteredSymptoms.map(symptom => ({
         ...symptom,
-        image_url: symptom.image_url || defaultImageUrl,
+        image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
       })),
     };
   }
@@ -155,28 +202,67 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
  */
 export async function getSymptomById(id: number): Promise<Symptom> {
   try {
-    const response = await fetch(`/api/symptoms/${id}/`);
+    // Определяем режим работы (аналогично getSymptoms)
+    // Проверяем, что это именно Vite dev server (порт 5173)
+    // В production билде Tauri протокол будет 'tauri:' или 'file:', а порт пустой
+    const isViteDevServer = (window.location.protocol === 'https:' || window.location.protocol === 'http:') 
+      && (window.location.port === '5173' || window.location.hostname.includes('5173'));
+    
+    // В Vite dev server используем прокси (относительный путь '/api')
+    // В остальных случаях (Tauri production или web) используем прямой API_BASE_URL
+    const baseUrl = isViteDevServer ? '' : API_BASE_URL;
+    const url = `${baseUrl}/api/symptoms/${id}/`;
+    
+    console.log('🔍 API Debug (getSymptomById):', {
+      isTauri,
+      isViteDevServer,
+      protocol: window.location.protocol,
+      port: window.location.port,
+      baseUrl,
+      fullUrl: url,
+      API_BASE_URL,
+    });
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     if (!response.ok) {
-      throw new Error('Failed to fetch symptom');
+      throw new Error(`Failed to fetch symptom: ${response.status} ${response.statusText}`);
     }
 
     const data: Symptom = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
     return {
       ...data,
-      image_url: data.image_url || defaultImageUrl,
+      image_url: data.image_url ? normalizeImageUrl(data.image_url) : defaultImageUrl,
     };
   } catch (error) {
-    console.warn('Backend недоступен, используем mock данные:', error);
-    // Используем mock данные
+    const isViteDevServer = (window.location.protocol === 'https:' || window.location.protocol === 'http:') 
+      && (window.location.port === '5173' || window.location.hostname.includes('5173'));
+    const attemptedBaseUrl = isViteDevServer ? '' : API_BASE_URL;
+    const attemptedUrl = `${attemptedBaseUrl}/api/symptoms/${id}/`;
+    
+    console.error('❌ Backend недоступен, используем mock данные:', error);
+    console.error('🔍 Детали ошибки:', {
+      message: error instanceof Error ? error.message : String(error),
+      isTauri,
+      isViteDevServer,
+      protocol: window.location.protocol,
+      port: window.location.port,
+      API_BASE_URL,
+      attemptedUrl,
+    });
+
     const symptom = mockSymptoms.find(s => s.id === id);
     if (!symptom) {
       throw new Error('Symptom not found');
     }
     return {
       ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
+      image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
     };
   }
 }

@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# SSL Certificates - НИКОГДА не выкладывайте приватные ключи в репозиторий!
+*.key
+ca.key
+cert.key
