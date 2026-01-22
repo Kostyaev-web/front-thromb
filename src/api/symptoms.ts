@@ -1,4 +1,6 @@
+import { axiosInstance } from './axiosConfig';
 import { Symptom, SymptomsResponse } from '../types';
+import { normalizeImageUrl } from '../config/api';
 
 // Mock данные для случая, когда бэкенд недоступен
 const mockSymptoms: Symptom[] = [
@@ -100,27 +102,26 @@ const defaultImageUrl = generatePlaceholderImage();
  */
 export async function getSymptoms(search?: string, page?: number): Promise<SymptomsResponse> {
   try {
-    const params = new URLSearchParams();
+    const params: Record<string, string> = {};
     if (search) {
-      params.append('search', search);
+      params.search = search;
     }
     if (page) {
-      params.append('page', page.toString());
+      params.page = page.toString();
     }
 
-    const url = `/api/symptoms/${params.toString() ? `?${params.toString()}` : ''}`;
-    const response = await fetch(url);
+    const response = await axiosInstance.get<SymptomsResponse>('/symptoms/', {
+      params,
+    });
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch symptoms');
-    }
-
-    const data: SymptomsResponse = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
-    data.results = data.results.map(symptom => ({
-      ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
-    }));
+    // Нормализуем URL изображений и добавляем изображение по умолчанию, если поле пустое
+    const data = {
+      ...response.data,
+      results: response.data.results.map(symptom => ({
+        ...symptom,
+        image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
+      })),
+    };
     return data;
   } catch (error) {
     console.warn('Backend недоступен, используем mock данные:', error);
@@ -144,7 +145,7 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
       previous: null,
       results: filteredSymptoms.map(symptom => ({
         ...symptom,
-        image_url: symptom.image_url || defaultImageUrl,
+        image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
       })),
     };
   }
@@ -155,17 +156,11 @@ export async function getSymptoms(search?: string, page?: number): Promise<Sympt
  */
 export async function getSymptomById(id: number): Promise<Symptom> {
   try {
-    const response = await fetch(`/api/symptoms/${id}/`);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch symptom');
-    }
-
-    const data: Symptom = await response.json();
-    // Добавляем изображение по умолчанию, если поле пустое
+    const response = await axiosInstance.get<Symptom>(`/symptoms/${id}/`);
+    // Нормализуем URL изображения и добавляем изображение по умолчанию, если поле пустое
     return {
-      ...data,
-      image_url: data.image_url || defaultImageUrl,
+      ...response.data,
+      image_url: response.data.image_url ? normalizeImageUrl(response.data.image_url) : defaultImageUrl,
     };
   } catch (error) {
     console.warn('Backend недоступен, используем mock данные:', error);
@@ -176,8 +171,37 @@ export async function getSymptomById(id: number): Promise<Symptom> {
     }
     return {
       ...symptom,
-      image_url: symptom.image_url || defaultImageUrl,
+      image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
     };
   }
 }
 
+/**
+ * Получить список недавно просмотренных симптомов (для неавторизованных пользователей)
+ */
+export async function getRecentlyViewedSymptoms(): Promise<SymptomsResponse> {
+  try {
+    const response = await axiosInstance.get<SymptomsResponse>('/symptoms/', {
+      params: { recently_viewed: 'true' },
+    });
+
+    // Нормализуем URL изображений и добавляем изображение по умолчанию, если поле пустое
+    const data = {
+      ...response.data,
+      results: response.data.results.map(symptom => ({
+        ...symptom,
+        image_url: symptom.image_url ? normalizeImageUrl(symptom.image_url) : defaultImageUrl,
+      })),
+    };
+    return data;
+  } catch (error) {
+    console.error('Ошибка загрузки недавно просмотренных симптомов:', error);
+    // Возвращаем пустой список при ошибке
+    return {
+      count: 0,
+      next: null,
+      previous: null,
+      results: [],
+    };
+  }
+}

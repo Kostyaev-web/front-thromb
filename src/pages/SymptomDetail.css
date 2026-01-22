@@ -116,3 +116,322 @@
   }
 }
 
+/* Блок недавно просмотренных симптомов - Карусель */
+.recently-viewed-section {
+  margin-top: 50px;
+  padding: 30px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.recently-viewed-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+  font-size: 1.75em;
+  font-weight: 700;
+  color: #005BBB;
+  text-align: center;
+}
+
+.title-icon {
+  font-size: 1.2em;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.recently-viewed-carousel {
+  position: relative;
+  padding: 0 50px;
+}
+
+.recently-viewed-carousel .carousel-control-prev,
+.recently-viewed-carousel .carousel-control-next {
+  width: 45px;
+  height: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.recently-viewed-carousel .carousel-control-prev:hover,
+.recently-viewed-carousel .carousel-control-next:hover {
+  opacity: 1;
+  box-shadow: 0 6px 16px rgba(0, 91, 187, 0.3);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.recently-viewed-carousel .carousel-control-prev {
+  left: 0;
+}
+
+.recently-viewed-carousel .carousel-control-next {
+  right: 0;
+}
+
+.recently-viewed-carousel .carousel-control-prev-icon,
+.recently-viewed-carousel .carousel-control-next-icon {
+  width: 20px;
+  height: 20px;
+  background-color: #005BBB;
+  border-radius: 50%;
+}
+
+.recently-viewed-carousel .carousel-indicators {
+  margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.recently-viewed-carousel .carousel-indicators button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #005BBB;
+  opacity: 0.4;
+  transition: all 0.3s ease;
+}
+
+.recently-viewed-carousel .carousel-indicators button.active {
+  opacity: 1;
+  width: 30px;
+  border-radius: 5px;
+}
+
+.recently-viewed-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 10px 0;
+}
+
+.symptom-card-mini {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.symptom-card-mini:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 24px rgba(0, 91, 187, 0.25);
+}
+
+.symptom-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.symptom-card-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 70%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #E8F0F5 0%, #d4e4f0 100%);
+}
+
+.symptom-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.symptom-card-mini:hover .symptom-card-image {
+  transform: scale(1.1);
+}
+
+.symptom-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 91, 187, 0.7) 0%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.symptom-card-mini:hover .symptom-card-overlay {
+  opacity: 1;
+}
+
+.view-icon {
+  font-size: 1.5em;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.symptom-card-content {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.symptom-card-title {
+  margin: 0 0 12px 0;
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.8em;
+}
+
+.symptom-card-points {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.points-value {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #FF6B35;
+  line-height: 1;
+}
+
+.points-label {
+  font-size: 0.85em;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Адаптивность для карусели */
+@media (max-width: 1200px) {
+  .recently-viewed-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .recently-viewed-carousel {
+    padding: 0 45px;
+  }
+}
+
+@media (max-width: 992px) {
+  .recently-viewed-section {
+    padding: 25px;
+  }
+
+  .recently-viewed-title {
+    font-size: 1.5em;
+  }
+
+  .recently-viewed-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .recently-viewed-section {
+    margin-top: 30px;
+    padding: 20px 15px;
+    border-radius: 12px;
+  }
+
+  .recently-viewed-title {
+    font-size: 1.3em;
+    margin-bottom: 20px;
+  }
+
+  .recently-viewed-carousel {
+    padding: 0 35px;
+  }
+
+  .recently-viewed-carousel .carousel-control-prev,
+  .recently-viewed-carousel .carousel-control-next {
+    width: 35px;
+    height: 35px;
+  }
+
+  .recently-viewed-carousel .carousel-control-prev-icon,
+  .recently-viewed-carousel .carousel-control-next-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .recently-viewed-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 5px 0;
+  }
+
+  .symptom-card-content {
+    padding: 12px;
+  }
+
+  .symptom-card-title {
+    font-size: 0.85em;
+    margin-bottom: 10px;
+  }
+
+  .points-value {
+    font-size: 1.3em;
+  }
+
+  .points-label {
+    font-size: 0.8em;
+  }
+}
+
+@media (max-width: 576px) {
+  .recently-viewed-section {
+    padding: 15px 10px;
+  }
+
+  .recently-viewed-title {
+    font-size: 1.2em;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .recently-viewed-carousel {
+    padding: 0 25px;
+  }
+
+  .recently-viewed-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .symptom-card-image-wrapper {
+    padding-top: 60%;
+  }
+}
