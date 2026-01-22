@@ -1,0 +1,76 @@
+.assessments-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.assessments-header {
+  margin-bottom: 2rem;
+}
+
+.assessments-header h1 {
+  color: #005BBB;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.filters-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.assessments-table {
+  margin-bottom: 2rem;
+}
+
+.assessments-table th {
+  background-color: #005BBB;
+  color: white;
+  font-weight: 600;
+}
+
+.pagination-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.pagination-info {
+  color: #6c757d;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.page-number {
+  font-weight: 500;
+  color: #005BBB;
+}
+
+@media (max-width: 768px) {
+  .assessments-list-container {
+    padding: 1rem;
+  }
+
+  .pagination-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pagination-buttons {
+    justify-content: center;
+  }
+
+  .table-responsive {
+    font-size: 0.9rem;
+  }
+}
+

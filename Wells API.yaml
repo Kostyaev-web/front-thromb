@@ -1,0 +1,1106 @@
+openapi: 3.0.3
+info:
+  title: Wells API
+  version: 1.0.0
+  description: REST API для системы оценки риска ТГВ/ТЭЛА
+paths:
+  /api/cart/info/:
+    get:
+      operationId: cart_info_retrieve
+      description: GET /api/cart/info/ - Информация о корзине (заявке-черновике)
+      summary: Информация о корзине (черновике)
+      tags:
+      - Cart
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/deep-vein-thrombosis/:
+    get:
+      operationId: deep_vein_thrombosis_list
+      description: GET /api/assessments/ - Список заявок с фильтрацией
+      summary: Список заявок
+      parameters:
+      - in: query
+        name: date_from
+        schema:
+          type: string
+        description: Дата формирования от (YYYY-MM-DD)
+      - in: query
+        name: date_to
+        schema:
+          type: string
+        description: Дата формирования до (YYYY-MM-DD)
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: status
+        schema:
+          type: string
+        description: Фильтр по статусу
+      tags:
+      - Assessments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedRiskAssessmentListList'
+          description: ''
+  /api/deep-vein-thrombosis-symptoms/{id}/:
+    put:
+      operationId: deep_vein_thrombosis_symptoms_update
+      description: PUT /api/assessment-symptoms/{id}/ - Изменение количества/порядка/значения
+        в оценки риска ТГВ/ТЭЛА
+      summary: Обновить позицию заявки
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessment Items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentSymptom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AssessmentSymptom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AssessmentSymptom'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentSymptom'
+          description: ''
+    patch:
+      operationId: deep_vein_thrombosis_symptoms_partial_update
+      description: PUT /api/assessment-symptoms/{id}/ - Изменение количества/порядка/значения
+        в оценки риска ТГВ/ТЭЛА
+      summary: Обновить позицию заявки
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessment Items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAssessmentSymptom'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAssessmentSymptom'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAssessmentSymptom'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssessmentSymptom'
+          description: ''
+  /api/deep-vein-thrombosis-symptoms/{id}/delete/:
+    delete:
+      operationId: deep_vein_thrombosis_symptoms_delete_destroy
+      description: DELETE /api/assessment-symptoms/{id}/ - Удаление симптома из оценки
+        риска ТГВ/ТЭЛА
+      summary: Удалить позицию из заявки
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessment Items
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/deep-vein-thrombosis/{assessment_id}/complete/:
+    put:
+      operationId: deep_vein_thrombosis_complete_update
+      description: PUT /api/assessments/{id}/complete/ - Завершить/отклонить оценку
+        риска ТГВ/ТЭЛА модератором
+      summary: Завершить/отклонить заявку (модератор)
+      parameters:
+      - in: path
+        name: assessment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/deep-vein-thrombosis/{assessment_id}/delete/:
+    delete:
+      operationId: deep_vein_thrombosis_delete_destroy
+      description: DELETE /api/assessments/{id}/ - Удаление оценки риска ТГВ/ТЭЛА
+      summary: Удалить заявку (создатель)
+      parameters:
+      - in: path
+        name: assessment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/deep-vein-thrombosis/{assessment_id}/form/:
+    put:
+      operationId: deep_vein_thrombosis_form_update
+      description: PUT /api/assessments/{id}/form/ - Сформировать оценку риска ТГВ/ТЭЛА
+        создателем
+      summary: Сформировать заявку (создатель)
+      parameters:
+      - in: path
+        name: assessment_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/deep-vein-thrombosis/{id}/:
+    get:
+      operationId: deep_vein_thrombosis_retrieve
+      description: GET /api/assessments/{id}/ - Одна запись оценки риска ТГВ/ТЭЛА
+        с симптомами
+      summary: Детали заявки
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskAssessment'
+          description: ''
+  /api/deep-vein-thrombosis/{id}/update/:
+    put:
+      operationId: deep_vein_thrombosis_update_update
+      description: PUT /api/assessments/{id}/ - Изменение полей оценки риска ТГВ/ТЭЛА
+      summary: Обновить заявку (только тема/комментарий)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskAssessmentUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RiskAssessmentUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RiskAssessmentUpdate'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskAssessmentUpdate'
+          description: ''
+    patch:
+      operationId: deep_vein_thrombosis_update_partial_update
+      description: PUT /api/assessments/{id}/ - Изменение полей оценки риска ТГВ/ТЭЛА
+      summary: Обновить заявку (только тема/комментарий)
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Assessments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRiskAssessmentUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRiskAssessmentUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRiskAssessmentUpdate'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RiskAssessmentUpdate'
+          description: ''
+  /api/symptoms/:
+    get:
+      operationId: symptoms_list
+      description: GET /api/symptoms/ - Список симптомов с фильтрацией
+      summary: Список симптомов
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - in: query
+        name: search
+        schema:
+          type: string
+        description: Поиск по названию
+      tags:
+      - Symptoms
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedClinicalSymptomList'
+          description: ''
+  /api/symptoms/{id}/:
+    get:
+      operationId: symptoms_retrieve
+      description: GET /api/symptoms/{id}/ - Одна запись симптома
+      summary: Детали симптома
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Symptoms
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalSymptom'
+          description: ''
+  /api/symptoms/{id}/delete/:
+    delete:
+      operationId: symptoms_delete_destroy
+      description: DELETE /api/symptoms/{id}/ - Удаление симптома
+      summary: Удалить симптом
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Symptoms
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/symptoms/{id}/update/:
+    put:
+      operationId: symptoms_update_update
+      description: PUT /api/symptoms/{id}/ - Изменение симптома
+      summary: Обновить симптом
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Symptoms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalSymptomCreate'
+          description: ''
+    patch:
+      operationId: symptoms_update_partial_update
+      description: PUT /api/symptoms/{id}/ - Изменение симптома
+      summary: Обновить симптом
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Symptoms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedClinicalSymptomCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedClinicalSymptomCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedClinicalSymptomCreate'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalSymptomCreate'
+          description: ''
+  /api/symptoms/{symptom_id}/add-to-draft/:
+    post:
+      operationId: symptoms_add_to_draft_create
+      description: POST /api/symptoms/{id}/add-to-draft/ - Добавление симптома в оценку
+      summary: Добавить симптом в черновик заявки
+      parameters:
+      - in: path
+        name: symptom_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Cart
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/symptoms/{symptom_id}/upload-image/:
+    post:
+      operationId: symptoms_upload_image_create
+      description: POST /api/symptoms/{id}/upload-image/ - Добавление изображения
+        к симптому
+      summary: Загрузить изображение для симптома
+      parameters:
+      - in: path
+        name: symptom_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - Symptoms
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/symptoms/create/:
+    post:
+      operationId: symptoms_create_create
+      description: POST /api/symptoms/ - Добавление симптома (без изображения)
+      summary: Создать симптом
+      tags:
+      - Symptoms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ClinicalSymptomCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClinicalSymptomCreate'
+          description: ''
+  /api/users/active-sessions/:
+    get:
+      operationId: users_active_sessions_retrieve
+      description: GET /api/users/active-sessions/ - Получение списка активных пользователей
+        с их сессиями через Lua скрипт
+      summary: Список активных пользователей с сессиями (Lua)
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/csrf-token/:
+    get:
+      operationId: users_csrf_token_retrieve
+      description: Получение CSRF токена для использования в заголовке X-CSRFToken.
+        Токен устанавливается в cookie csrftoken и возвращается в ответе.
+      summary: Получить CSRF токен
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/users/login/:
+    post:
+      operationId: users_login_create
+      description: 'Аутентификация пользователя с получением RSA-зашифрованного токена.
+        Токен возвращается в заголовке X-Auth-Token. Используйте этот токен в заголовке
+        X-Auth-Token или Authorization: Bearer <token> для последующих запросов.'
+      summary: Вход (RSA SessionAuth)
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Успешный вход. Токен в заголовке X-Auth-Token
+        '400':
+          description: Неверные данные для входа
+  /api/users/logout/:
+    post:
+      operationId: users_logout_create
+      description: Деавторизация пользователя. Удаляет сессию из Redis и очищает cookie.
+        После logout RSA токен становится недействительным, так как сессия удаляется
+        из Redis.
+      summary: Выход (SessionAuth)
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/:
+    get:
+      operationId: users_profile_retrieve
+      description: GET /api/users/profile/ - Получение профиля пользователя
+      summary: Профиль пользователя
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/profile/update/:
+    put:
+      operationId: users_profile_update_update
+      description: PUT /api/users/profile/ - Обновление профиля пользователя
+      summary: Обновить профиль пользователя
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          description: No response body
+  /api/users/public-key/:
+    get:
+      operationId: users_public_key_retrieve
+      description: Получение публичного RSA ключа для шифрования. Ключ используется
+        для шифрования данных на клиенте. Сервер использует приватный ключ для расшифровки.
+        Также устанавливает CSRF cookie для последующих запросов.
+      summary: Получить публичный RSA ключ
+      tags:
+      - Auth
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/users/register/:
+    post:
+      operationId: users_register_create
+      description: POST /api/users/register/ - Регистрация пользователя
+      summary: Регистрация пользователя
+      tags:
+      - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+        required: true
+      security:
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    AssessmentSymptom:
+      type: object
+      description: Сериализатор для симптомов в оценке
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        symptom:
+          type: integer
+          readOnly: true
+          title: Симптом
+        symptom_name:
+          type: string
+          readOnly: true
+        symptom_points:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Баллы симптома
+          description: Баллы на момент добавления
+        total_points:
+          type: integer
+          readOnly: true
+      required:
+      - id
+      - symptom
+      - symptom_name
+      - total_points
+    BlankEnum:
+      enum:
+      - ''
+    ClinicalSymptom:
+      type: object
+      description: Сериализатор для клинических симптомов
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название симптома
+          maxLength: 200
+        slug:
+          type: string
+          title: Слаг
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          title: Описание
+        points:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Баллы по шкале Уэллса
+        risk_factor:
+          type: string
+          title: Фактор риска
+          maxLength: 200
+        is_active:
+          type: boolean
+          title: Активен
+        image_url:
+          type: string
+          readOnly: true
+      required:
+      - description
+      - id
+      - image_url
+      - name
+      - points
+      - risk_factor
+      - slug
+    ClinicalSymptomCreate:
+      type: object
+      description: Сериализатор для создания симптомов (без изображения)
+      properties:
+        name:
+          type: string
+          title: Название симптома
+          maxLength: 200
+        slug:
+          type: string
+          title: Слаг
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          title: Описание
+        points:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Баллы по шкале Уэллса
+        risk_factor:
+          type: string
+          title: Фактор риска
+          maxLength: 200
+        is_active:
+          type: boolean
+          title: Активен
+      required:
+      - description
+      - name
+      - points
+      - risk_factor
+      - slug
+    NullEnum:
+      enum:
+      - null
+    PaginatedClinicalSymptomList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClinicalSymptom'
+    PaginatedRiskAssessmentListList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/RiskAssessmentList'
+    PatchedAssessmentSymptom:
+      type: object
+      description: Сериализатор для симптомов в оценке
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        symptom:
+          type: integer
+          readOnly: true
+          title: Симптом
+        symptom_name:
+          type: string
+          readOnly: true
+        symptom_points:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          nullable: true
+          title: Баллы симптома
+          description: Баллы на момент добавления
+        total_points:
+          type: integer
+          readOnly: true
+    PatchedClinicalSymptomCreate:
+      type: object
+      description: Сериализатор для создания симптомов (без изображения)
+      properties:
+        name:
+          type: string
+          title: Название симптома
+          maxLength: 200
+        slug:
+          type: string
+          title: Слаг
+          maxLength: 50
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+          title: Описание
+        points:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          title: Баллы по шкале Уэллса
+        risk_factor:
+          type: string
+          title: Фактор риска
+          maxLength: 200
+        is_active:
+          type: boolean
+          title: Активен
+    PatchedRiskAssessmentUpdate:
+      type: object
+      description: Сериализатор для обновления полей оценки
+      properties:
+        topic:
+          type: string
+          nullable: true
+          title: Тема оценки
+          maxLength: 180
+        comment:
+          type: string
+          nullable: true
+          title: Комментарий
+    RiskAssessment:
+      type: object
+      description: Сериализатор для оценок риска с русскими названиями статуса и риска
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient:
+          type: integer
+          readOnly: true
+          title: Пациент
+        patient_username:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          readOnly: true
+        risk_level:
+          type: string
+          readOnly: true
+        topic:
+          type: string
+          nullable: true
+          title: Тема оценки
+          maxLength: 180
+        recommendation:
+          type: string
+          readOnly: true
+          nullable: true
+          title: Рекомендации
+        comment:
+          type: string
+          nullable: true
+          title: Комментарий
+        formation_date:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          title: Дата формирования
+        completion_date:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          title: Дата завершения
+        moderator:
+          type: integer
+          readOnly: true
+          nullable: true
+          title: Модератор
+        moderator_username:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        total_score:
+          type: integer
+          readOnly: true
+        assessment_symptoms:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssessmentSymptom'
+          readOnly: true
+      required:
+      - assessment_symptoms
+      - completion_date
+      - created_at
+      - formation_date
+      - id
+      - moderator
+      - moderator_username
+      - patient
+      - patient_username
+      - recommendation
+      - risk_level
+      - status
+      - total_score
+    RiskAssessmentList:
+      type: object
+      description: Сериализатор для списка оценок риска
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        patient_username:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          title: Статус
+        risk_level:
+          nullable: true
+          title: Уровень риска
+          oneOf:
+          - $ref: '#/components/schemas/RiskLevelEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        topic:
+          type: string
+          nullable: true
+          title: Тема оценки
+          maxLength: 180
+        formation_date:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата формирования
+        completion_date:
+          type: string
+          format: date-time
+          nullable: true
+          title: Дата завершения
+        moderator_username:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        total_score:
+          type: integer
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - moderator_username
+      - patient_username
+      - total_score
+    RiskAssessmentUpdate:
+      type: object
+      description: Сериализатор для обновления полей оценки
+      properties:
+        topic:
+          type: string
+          nullable: true
+          title: Тема оценки
+          maxLength: 180
+        comment:
+          type: string
+          nullable: true
+          title: Комментарий
+    RiskLevelEnum:
+      enum:
+      - low
+      - moderate
+      - high
+      type: string
+      description: |-
+        * `low` - Низкий риск
+        * `moderate` - Умеренный риск
+        * `high` - Высокий риск
+    StatusEnum:
+      enum:
+      - draft
+      - formed
+      - completed
+      - rejected
+      - deleted
+      type: string
+      description: |-
+        * `draft` - Черновик
+        * `formed` - Сформирован
+        * `completed` - Завершен
+        * `rejected` - Отклонен
+        * `deleted` - Удален
+    User:
+      type: object
+      description: Сериализатор для пользователей
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - date_joined
+      - id
+      - username
+    UserCreate:
+      type: object
+      description: Сериализатор для создания пользователей
+      properties:
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+    UserLogin:
+      type: object
+      description: Сериализатор для авторизации
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+      - username
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

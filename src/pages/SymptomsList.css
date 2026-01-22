@@ -2,6 +2,63 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 15px;
+  position: relative;
+}
+
+.draft-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: sticky;
+  top: 72px;
+  z-index: 5;
+}
+
+.draft-bar-spacer {
+  flex: 1;
+}
+.draft-bar-action {
+  display: flex;
+  justify-content: flex-end;
+}
+.draft-button-round {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.draft-button-round:hover:not(:disabled) {
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+
+.draft-button-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+
+  background: #dc3545;
+  color: white;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: bold;
+  border: 2px solid white;
 }
 
 /* Поиск */
@@ -10,6 +67,7 @@
   padding: 20px;
   border-radius: 12px;
   margin-bottom: 30px;
+  margin-top: 80px;
   border: 1px solid var(--border-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -132,48 +190,104 @@
 }
 
 /* Кнопка добавить */
-.card-action {
+.symptom-card-actions {
   padding: 0 15px 15px;
+  margin-top: auto;
 }
 
-.add-btn {
-  display: inline-block;
+.symptom-card-actions .btn {
   width: 100%;
-  padding: 8px 16px;
-  background: var(--webmd-blue);
-  color: white;
-  text-decoration: none;
-  border-radius: 3px;
-  border: none;
-  font-size: 14px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-  text-align: center;
-}
-
-.add-btn:hover {
-  background: var(--webmd-dark-blue);
-}
-
-.add-btn.disabled {
-  background: #CCCCCC;
-  cursor: not-allowed;
-  opacity: 0.6;
-  display: block;
-  text-align: center;
 }
 
 /* Адаптивность */
 @media (max-width: 992px) {
   .symptoms-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .symptoms-container {
+    padding: 0 10px;
+  }
+
+  .search-section {
+    padding: 15px;
+  }
+
+  .draft-button-container {
+    position: absolute;
+    top: 80px;
+    right: 10px;
   }
 }
 
 @media (max-width: 768px) {
   .symptoms-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .symptoms-container {
+    padding: 0 10px;
+  }
+
+  .draft-button-container {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+  }
+
+  .draft-button {
+    width: 56px;
+    height: 56px;
+  }
+
+  .search-section {
+    padding: 15px;
+    margin-bottom: 20px;
+    margin-top: 70px;
+  }
+
+  .search-section .d-flex {
+    flex-direction: column;
+  }
+
+  .search-section .search-input {
+    margin-bottom: 10px;
+  }
+
+  .search-section .search-btn {
+    width: 100%;
+  }
+
+  .symptom-card {
+    margin-bottom: 0;
+  }
+
+  .symptom-image {
+    height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  .symptoms-container {
+    padding: 0 8px;
+  }
+
+  .search-section {
+    padding: 12px;
+  }
+
+  .symptom-info {
+    padding: 12px;
+  }
+
+  .symptom-title {
+    font-size: 14px;
+  }
+
+  .points-value {
+    font-size: 20px;
   }
 }
 

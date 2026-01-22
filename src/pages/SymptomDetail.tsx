@@ -1,13 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Container, Spinner } from 'react-bootstrap';
-import { useParams, Link } from 'react-router-dom';
+import { Container, Spinner, Button, Alert } from 'react-bootstrap';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { getSymptomById } from '../api/symptoms';
 import { Symptom } from '../types';
+import { RootState, AppDispatch } from '../store/store';
+import { addSymptomToDraft, clearError } from '../store/assessmentsSlice';
 import './SymptomDetail.css';
 
 export function SymptomDetail() {
   const { id } = useParams<{ id: string }>();
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state: RootState) => state.auth);
+  const { loading: addingSymptom, error: addError } = useSelector((state: RootState) => state.assessments);
   const [symptom, setSymptom] = useState<Symptom | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -123,8 +130,52 @@ export function SymptomDetail() {
                 <span>{getPointsLabel(symptom.points)}</span>
               </div>
             </div>
+
+            {isAuthenticated && (
+              <div className="symptom-action-section">
+                <Button
+                  variant="success"
+                  size="lg"
+                  onClick={async () => {
+                    if (!isAuthenticated) {
+                      navigate('/login');
+                      return;
+                    }
+                    try {
+                      await dispatch(addSymptomToDraft(symptom.id)).unwrap();
+                      // Можно показать уведомление об успехе
+                    } catch (error) {
+                      console.error('Ошибка добавления симптома:', error);
+                    }
+                  }}
+                  disabled={addingSymptom}
+                >
+                  {addingSymptom ? (
+                    <>
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                        className="me-2"
+                      />
+                      Добавление...
+                    </>
+                  ) : (
+                    'Добавить в заявку'
+                  )}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
+
+        {addError && (
+          <Alert variant="danger" dismissible onClose={() => dispatch(clearError())}>
+            {addError}
+          </Alert>
+        )}
       </Container>
     </>
   );

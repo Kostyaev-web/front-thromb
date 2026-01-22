@@ -94,6 +94,33 @@
   text-decoration: none;
 }
 
+.custom-navbar .nav-link.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Разделитель перед профилем */
+.navbar-divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 0 12px;
+}
+
+/* Кнопка профиля отдельно */
+.custom-navbar .profile-link {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 6px 12px;
+  margin-left: 8px;
+}
+
+.custom-navbar .profile-link:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
 .custom-navbar .navbar-brand {
   color: white !important;
   padding: 0;
@@ -105,3 +132,219 @@
   text-decoration: none;
 }
 
+/* Кнопка бургера */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+  margin-right: 15px;
+}
+
+.burger-line {
+  width: 100%;
+  height: 3px;
+  background-color: white;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+/* Мобильное меню (Offcanvas) */
+.mobile-menu-offcanvas {
+  z-index: 1050;
+}
+
+.mobile-menu-body {
+  padding: 0;
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 20px;
+  text-decoration: none;
+  color: var(--text-primary);
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.mobile-nav-item:first-child {
+  margin-top: 10px;
+}
+
+.mobile-nav-item:last-child {
+  margin-bottom: 10px;
+}
+
+.mobile-nav-item:hover {
+  background: #F0F7FF;
+  color: var(--webmd-blue);
+  text-decoration: none;
+  border-left-color: var(--webmd-blue);
+  box-shadow: 0 2px 6px rgba(0, 91, 187, 0.1);
+  transform: translateX(4px);
+}
+
+.mobile-nav-item:active {
+  background: #E8F0F5;
+  transform: translateX(2px);
+}
+
+.mobile-nav-item.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: var(--text-secondary);
+}
+
+.mobile-nav-item.text-danger {
+  color: #dc3545 !important;
+}
+
+.mobile-nav-item.text-danger:hover {
+  color: #c82333 !important;
+  background: #fff5f5;
+}
+
+.mobile-nav-icon {
+  font-size: 24px;
+  width: 30px;
+  text-align: center;
+}
+
+.mobile-nav-text {
+  flex: 1;
+}
+
+/* Разделитель в мобильном меню */
+.mobile-nav-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 8px 0;
+}
+
+/* Кнопка профиля в мобильном меню */
+.profile-mobile-link {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+  .custom-navbar .title-group h1 {
+    font-size: 20px;
+  }
+
+  .custom-navbar .title-group .subtitle {
+    font-size: 10px;
+  }
+
+  .custom-navbar .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-navbar .nav-wrapper {
+    padding: 0 10px;
+  }
+
+  .custom-navbar .logo-section {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .custom-navbar .title-group h1 {
+    font-size: 18px;
+  }
+
+  .custom-navbar .title-group .subtitle {
+    font-size: 9px;
+  }
+
+  .custom-navbar .logo-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .mobile-menu-toggle {
+    width: 28px;
+    height: 28px;
+    margin-right: 10px;
+  }
+
+  .burger-line {
+    height: 2.5px;
+  }
+
+  .mobile-nav-item {
+    padding: 16px 18px;
+    font-size: 15px;
+  }
+
+  .mobile-nav-icon {
+    font-size: 22px;
+    width: 28px;
+  }
+}
+
+@media (max-width: 576px) {
+  .custom-navbar .title-group h1 {
+    font-size: 16px;
+  }
+
+  .custom-navbar .title-group .subtitle {
+    display: none;
+  }
+
+  .custom-navbar .logo-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .custom-navbar .logo-icon span {
+    font-size: 20px !important;
+  }
+
+  .mobile-menu-toggle {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mobile-nav-item {
+    padding: 14px 16px;
+    font-size: 14px;
+  }
+
+  .mobile-nav-icon {
+    font-size: 20px;
+    width: 26px;
+  }
+}

@@ -57,6 +57,12 @@
   border-bottom: none;
 }
 
+.symptom-action-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+}
+
 .description-block h3,
 .risk-factor-block h3,
 .points-block h3 {
@@ -109,10 +115,75 @@
 }
 
 /* Адаптивность */
+@media (max-width: 992px) {
+  .symptom-detail {
+    gap: 30px;
+    padding: 30px;
+  }
+
+  .detail-image {
+    height: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .symptom-detail {
     grid-template-columns: 1fr;
-    padding: 25px;
+    padding: 20px;
+    gap: 25px;
+  }
+
+  .detail-image-section {
+    order: -1;
+  }
+
+  .detail-image {
+    height: 200px;
+  }
+
+  .detail-info-section h2 {
+    font-size: 24px;
+  }
+
+  .description-block,
+  .risk-factor-block,
+  .points-block {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .symptom-detail-container {
+    padding: 0 8px;
+  }
+
+  .symptom-detail {
+    padding: 15px;
+    gap: 20px;
+  }
+
+  .detail-image {
+    height: 180px;
+  }
+
+  .detail-info-section h2 {
+    font-size: 20px;
+  }
+
+  .big-points {
+    font-size: 28px;
+  }
+
+  .description-block h3,
+  .risk-factor-block h3,
+  .points-block h3 {
+    font-size: 14px;
+  }
+
+  .description-block p,
+  .risk-factor-block p {
+    font-size: 13px;
   }
 }
 
