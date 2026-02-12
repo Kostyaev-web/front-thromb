@@ -7,6 +7,7 @@ import { getSymptomById, getRecentlyViewedSymptoms } from '../api/symptoms';
 import { Symptom } from '../types';
 import { RootState, AppDispatch } from '../store/store';
 import { addSymptomToDraft, clearError } from '../store/assessmentsSlice';
+import { setCurrentSymptom, setError, setLoading } from '../store/symptomsSlice';
 import './SymptomDetail.css';
 
 export function SymptomDetail() {
@@ -15,8 +16,7 @@ export function SymptomDetail() {
   const navigate = useNavigate();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
   const { loading: addingSymptom, error: addError } = useSelector((state: RootState) => state.assessments);
-  const [symptom, setSymptom] = useState<Symptom | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { currentSymptom: symptom, loading } = useSelector((state: RootState) => state.symptoms);
   const [recentlyViewedSymptoms, setRecentlyViewedSymptoms] = useState<Symptom[]>([]);
   const [, setLoadingRecentlyViewed] = useState(false);
 
@@ -24,7 +24,11 @@ export function SymptomDetail() {
     if (id) {
       loadSymptom(parseInt(id));
     }
-  }, [id]);
+
+    return () => {
+      dispatch(setCurrentSymptom(null));
+    };
+  }, [dispatch, id]);
 
   useEffect(() => {
     // Загружаем недавно просмотренные симптомы только для неавторизованных пользователей
@@ -34,14 +38,16 @@ export function SymptomDetail() {
   }, [isAuthenticated, id]);
 
   const loadSymptom = async (symptomId: number) => {
-    setLoading(true);
+    dispatch(setLoading(true));
+    dispatch(setCurrentSymptom(null));
     try {
       const data = await getSymptomById(symptomId);
-      setSymptom(data);
+      dispatch(setCurrentSymptom(data));
     } catch (error) {
+      dispatch(setError('Ошибка загрузки симптома'));
       console.error('Ошибка загрузки симптома:', error);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
 
@@ -256,4 +262,3 @@ export function SymptomDetail() {
     </>
   );
 }
-

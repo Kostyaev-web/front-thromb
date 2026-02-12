@@ -4,7 +4,7 @@ import mkcert from 'vite-plugin-mkcert'
 import fs from 'fs'
 import path from 'path'
 
-// TODO: Замените IP адрес на ваш ZeroTier IP
+
 const ZEROTIER_IP = '10.98.12.125';
 const API_PORT = 8443;
 const IMAGES_PORT = 9000;

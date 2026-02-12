@@ -4,10 +4,10 @@ import {Alert, Button, Card, Container, Form, Spinner} from 'react-bootstrap';
 import {Link, useNavigate} from 'react-router-dom';
 import {Breadcrumbs} from '../components/Breadcrumbs';
 import {getSymptoms} from '../api/symptoms';
-import {Symptom} from '../types';
 import {AppDispatch, RootState} from '../store/store';
 import {setSearchQuery} from '../store/filtersSlice';
 import {addSymptomToDraft, clearError, getCartInfo} from '../store/assessmentsSlice';
+import {setError, setLoading, setSymptoms} from '../store/symptomsSlice';
 import './SymptomsList.css';
 
 export function SymptomsList() {
@@ -18,11 +18,9 @@ export function SymptomsList() {
     const {
         loading: addingSymptom,
         error: addError,
-        assessmentsList,
         currentDraft
     } = useSelector((state: RootState) => state.assessments);
-    const [symptoms, setSymptoms] = useState<Symptom[]>([]);
-    const [loading, setLoading] = useState(true);
+    const {symptoms, loading} = useSelector((state: RootState) => state.symptoms);
     const [addingSymptomId, setAddingSymptomId] = useState<number | null>(null);
 
     // Используем currentDraft для получения информации о черновике
@@ -51,17 +49,18 @@ export function SymptomsList() {
         let isMounted = true;
 
         const loadData = async () => {
-            setLoading(true);
+            dispatch(setLoading(true));
             try {
                 const data = await getSymptoms(searchQuery || undefined);
                 if (isMounted) {
-                    setSymptoms(data.results);
+                    dispatch(setSymptoms(data));
                 }
             } catch (error) {
+                dispatch(setError('Ошибка загрузки симптомов'));
                 console.error('Ошибка загрузки симптомов:', error);
             } finally {
                 if (isMounted) {
-                    setLoading(false);
+                    dispatch(setLoading(false));
                 }
             }
         };
@@ -255,4 +254,3 @@ export function SymptomsList() {
         </>
     );
 }
-
